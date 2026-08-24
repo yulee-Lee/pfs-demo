@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
 <title>比例字級閱讀示範｜序川科技工作室</title>
 <style>
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -16,18 +19,18 @@ header .sub{ font-size:12.5px; color:#666; margin-top:4px; }
 .panel{ background:#fff; border:1px solid #d8dbe0; border-radius:4px; padding:14px 16px; margin-bottom:14px; }
 .panel h2{ font-size:15px; color:#1a2338; border-left:4px solid #1a2338; padding-left:8px; margin-bottom:10px; }
 .ctrl{ display:flex; flex-wrap:wrap; gap:14px 26px; }
-.ctrl .item{ display:flex; align-items:center; gap:8px; font-size:13.5px; }
+.ctrl .item{ display:flex; align-items:center; gap:8px; font-size:15px; }
 .ctrl label{ color:#444; white-space:nowrap; }
-.ctrl select, .ctrl input[type=number]{ font-size:14px; padding:3px 6px; border:1px solid #bbb; border-radius:3px; width:70px; background:#fff; color:#222; }
+.ctrl select, .ctrl input[type=number]{ font-size:16px; padding:3px 6px; border:1px solid #bbb; border-radius:3px; width:70px; background:#fff; color:#222; }
 .ctrl .val{ min-width:44px; color:#1a2338; font-weight:bold; }
-textarea{ width:100%; height:110px; font-size:15px; padding:8px 10px; border:1px solid #bbb; border-radius:3px; resize:vertical; font-family:inherit; color:#222; }
-button{ font-size:14px; padding:7px 18px; border:1px solid #1a2338; background:#1a2338; color:#fff; border-radius:3px; cursor:pointer; letter-spacing:1px; }
+textarea{ width:100%; height:110px; font-size:16px; padding:8px 10px; border:1px solid #bbb; border-radius:3px; resize:vertical; font-family:inherit; color:#222; }
+button{ font-size:16px; padding:9px 20px; border:1px solid #1a2338; background:#1a2338; color:#fff; border-radius:3px; cursor:pointer; letter-spacing:1px; }
 button.sec{ background:#fff; color:#1a2338; }
 button:active{ opacity:.8; }
 .btnrow{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 .hint{ font-size:12.5px; color:#777; margin-top:8px; }
-#stats{ font-size:13px; color:#444; background:#f6f7f9; border:1px solid #e2e4e8; border-radius:3px; padding:8px 12px; margin-bottom:10px; }
-#reader{ font-family:"DFKai-SB","BiaoKai","標楷體","Kaiti TC","Kaiti SC",serif;
+#stats{ font-size:14.5px; color:#444; background:#f6f7f9; border:1px solid #e2e4e8; border-radius:3px; padding:8px 12px; margin-bottom:10px; }
+#reader{ font-family:"LXGW WenKai TC","DFKai-SB","BiaoKai","標楷體","Kaiti TC","Kaiti SC",serif;
          background:#fff; padding:6px 2px; word-break:break-all; }
 #reader p{ margin:0 0 1em; text-align:justify; }
 .mark-s{ color:#1c5fa8; } .mark-l{ color:#b03030; }
@@ -52,7 +55,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
 
 <div class="panel">
   <h2>使用說明</h2>
-  <div style="font-size:13.5px; color:#444;">
+  <div style="font-size:15px; color:#444;">
     下方文章已依「比例字級」自動呈現：筆畫少的字縮小一級、筆畫普通的用基準字級、筆畫多的字放大一級。
     您也可以把任何文字（例如在 LINE 長按訊息選「複製」）貼進下面的輸入框，按「以比例字級呈現」，
     立即看到相同效果。預設勾選「與固定字級並列對照」，可上下比較兩種呈現的差別。筆畫數依據中華民國 CNS11643 全字庫官方資料自動判定，涵蓋數萬字。
@@ -60,7 +63,8 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
   <textarea id="src" placeholder="在此貼上文字（可從 LINE、新聞、電子書複製）"></textarea>
   <div class="btnrow">
     <button id="btnRender">以比例字級呈現</button>
-    <button id="btnDemo" class="sec">載入範例文章（赤壁賦）</button>
+    <button id="btnDemo" class="sec">範例一：赤壁賦</button>
+    <button id="btnDemo2" class="sec">範例二：生活短文</button>
   </div>
 </div>
 
@@ -74,6 +78,8 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
     <div class="item"><label>筆畫</label>
       <select id="lowT"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
       <label>畫以下 → 減一級</label></div>
+    <div class="item"><label>字體</label>
+      <select id="fontSel"><option value="kai" selected>楷體</option><option value="hei">黑體</option></select></div>
     <div class="item"><label>筆畫</label>
       <select id="highT"><option>14</option><option>15</option><option selected>16</option><option>17</option><option>18</option></select>
       <label>畫以上 → 加一級</label></div>
@@ -111,12 +117,13 @@ var AMAP = {};
 for (var i = 0; i < ALPHA.length; i++) AMAP[ALPHA.charAt(i)] = i;
 
 function strokeOf(ch){
-  var cp = ch.codePointAt(0);
+  var cp = ch.charCodeAt(0);
   if (cp < START || cp > END) return 0;
   var v = AMAP[TBL.charAt(cp - START)];
   return v === undefined ? 0 : v;
 }
 
+var DEMO_TEXT2 = "臺灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n閱讀時若覺得文字太小，可將上方的基準字級調大；筆畫繁複的字自動放大一級、筆畫簡單的字縮小一級，每一個字都更容易辨認，眼睛也比較不容易疲勞。";
 var DEMO_TEXT = "壬戌之秋，七月既望，蘇子與客泛舟遊於赤壁之下。清風徐來，水波不興，舉酒屬客，誦明月之詩，歌窈窕之章。少焉，月出於東山之上，徘徊於斗牛之間，白露橫江，水光接天；縱一葦之所如，凌萬頃之茫然。浩浩乎如馮虛御風，而不知其所止；飄飄乎如遺世獨立，羽化而登仙。\n於是飲酒樂甚，扣舷而歌之。歌曰：「桂棹兮蘭槳，擊空明兮泝流光。渺渺兮予懷，望美人兮天一方。」客有吹洞簫者，倚歌而和之，其聲嗚嗚然，如怨如慕，如泣如訴，餘音嫋嫋，不絕如縷。舞幽壑之潛蛟，泣孤舟之嫠婦。\n蘇子愀然，正襟危坐，而問客曰：「何為其然也？」\n客曰：「『月明星稀，烏鵲南飛』，此非曹孟德之詩乎？西望夏口，東望武昌，山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？方其破荊州，下江陵，順流而東也，舳艫千里，旌旗蔽空，釃酒臨江，橫槊賦詩，固一世之雄也，而今安在哉？況吾與子，漁樵於江渚之上，侶魚蝦而友麋鹿；駕一葉之扁舟，擧匏樽以相屬。寄蜉蝣於天地，渺滄海之一粟，哀吾生之須臾，羨長江之無窮。挾飛仙以遨遊，抱眀月而長終。知不可乎驟得，託遺響於悲風。\n蘇子曰：「客亦知夫水與月乎？逝者如斯，而未嘗往也；盈虛者如彼，而卒莫消長也，蓋將自其變者而觀之，則天地曾不能以一瞬；自其不變者而觀之，則物與我皆無盡也，而又何羨乎？且夫天地之間，物各有主，苟非吾之所有，雖一毫而莫取。惟江上之清風，與山間之明月，耳得之而為聲，目遇之而成色，取之無禁，用之不竭，是造物者之無盡藏也，而吾與子之所共適。」\n客喜而笑，洗盞更酌。肴核既盡，杯盤狼籍，相與枕藉乎舟中，不知東方之既白。";
 
 var $ = function(id){ return document.getElementById(id); };
@@ -183,6 +190,10 @@ function render(){
       return { html: out.join(""), total: total, nS: nS, nL: nL };
     }
 
+    $("reader").style.fontFamily = ($("fontSel").value === "hei")
+      ? '"Microsoft JhengHei","PingFang TC","Noto Sans CJK TC",sans-serif'
+      : '"LXGW WenKai TC","DFKai-SB","BiaoKai","標楷體","Kaiti TC","Kaiti SC",serif';
+
     var r = renderText(false);
     var html = r.html;
     if ($("compare").checked){
@@ -197,7 +208,7 @@ function render(){
         (r.total - adj) + " 字、大一級 " + r.nL + " 字；比例字級共 " + adj + " 字，占 " +
         (Math.round(adj / r.total * 1000) / 10) + "%。";
     } else {
-      $("stats").textContent = "尚未載入文章。";
+      $("stats").textContent = "本段內容沒有中文字，全部以基準字級呈現。";
     }
   } catch (e){
     $("stats").textContent = "呈現時發生問題，請重新整理頁面。";
@@ -215,7 +226,12 @@ $("btnDemo").addEventListener("click", function(){
   $("src").value = "";
   render();
 });
-["base","step","lowT","highT","markColor","compare"].forEach(function(id){
+$("btnDemo2").addEventListener("click", function(){
+  current = DEMO_TEXT2;
+  $("src").value = "";
+  render();
+});
+["base","step","lowT","highT","markColor","compare","fontSel"].forEach(function(id){
   $(id).addEventListener("change", render);
 });
 render();
