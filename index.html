@@ -6,7 +6,8 @@
 <title>比例字級閱讀示範｜序川科技工作室</title>
 <style>
 *{ box-sizing:border-box; margin:0; padding:0; }
-body{ font-family:"Microsoft JhengHei","PingFang TC","Noto Sans CJK TC",sans-serif;
+body{ -webkit-text-size-adjust:100%; text-size-adjust:100%;
+      font-family:"Microsoft JhengHei","PingFang TC","Noto Sans CJK TC",sans-serif;
       background:#f2f3f5; color:#222; line-height:1.7; }
 .wrap{ max-width:860px; margin:0 auto; padding:18px 16px 40px; }
 header{ border-bottom:2px solid #1a2338; padding:14px 0 10px; margin-bottom:14px; }
@@ -30,6 +31,8 @@ button:active{ opacity:.8; }
          background:#fff; padding:6px 2px; word-break:break-all; }
 #reader p{ margin:0 0 1em; text-align:justify; }
 .mark-s{ color:#1c5fa8; } .mark-l{ color:#b03030; }
+.cmp-cap{ font-family:"Microsoft JhengHei","PingFang TC",sans-serif; font-size:13px; color:#fff; background:#1a2338; display:inline-block; padding:2px 12px; border-radius:3px; margin:4px 0 8px; letter-spacing:2px; }
+.cmp-cap.fixed{ background:#6c727b; }
 .rule{ width:100%; border-collapse:collapse; font-size:13px; margin-top:6px; table-layout:fixed; }
 .rule th{ background:#1a2338; color:#fff; font-weight:normal; padding:6px 8px; text-align:left; }
 .rule td{ border-bottom:1px solid #e2e4e8; padding:6px 8px; word-break:break-word; }
@@ -52,7 +55,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
   <div style="font-size:13.5px; color:#444;">
     下方文章已依「比例字級」自動呈現：筆畫少的字縮小一級、筆畫普通的用基準字級、筆畫多的字放大一級。
     您也可以把任何文字（例如在 LINE 長按訊息選「複製」）貼進下面的輸入框，按「以比例字級呈現」，
-    立即看到相同效果。筆畫數依據中華民國 CNS11643 全字庫官方資料自動判定，涵蓋數萬字。
+    立即看到相同效果。預設勾選「與固定字級並列對照」，可上下比較兩種呈現的差別。筆畫數依據中華民國 CNS11643 全字庫官方資料自動判定，涵蓋數萬字。
   </div>
   <textarea id="src" placeholder="在此貼上文字（可從 LINE、新聞、電子書複製）"></textarea>
   <div class="btnrow">
@@ -67,13 +70,14 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
     <div class="item"><label>基準字級</label>
       <select id="base"></select><span>pt</span></div>
     <div class="item"><label>級距</label>
-      <select id="step"><option>0.5</option><option selected>1</option><option>1.5</option><option>2</option><option>3</option></select><span>pt</span></div>
+      <select id="step"><option>0.5</option><option>1</option><option>1.5</option><option selected>2</option><option>3</option></select><span>pt</span></div>
     <div class="item"><label>筆畫</label>
       <select id="lowT"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
       <label>畫以下 → 減一級</label></div>
     <div class="item"><label>筆畫</label>
       <select id="highT"><option>14</option><option>15</option><option selected>16</option><option>17</option><option>18</option></select>
       <label>畫以上 → 加一級</label></div>
+    <div class="item"><label><input type="checkbox" id="compare" checked> 與固定字級並列對照</label></div>
     <div class="item"><label><input type="checkbox" id="markColor"> 以顏色標示大小字級（檢視用）</label></div>
   </div>
   <table class="rule">
@@ -119,7 +123,7 @@ var $ = function(id){ return document.getElementById(id); };
 var baseSel = $("base");
 for (var p = 10; p <= 28; p++){
   var o = document.createElement("option");
-  o.textContent = p; if (p === 12) o.selected = true;
+  o.textContent = p; if (p === 16) o.selected = true;
   baseSel.appendChild(o);
 }
 
@@ -145,39 +149,53 @@ function render(){
     $("ruleMidPt").textContent = base + "pt";
     $("ruleHighPt").textContent = (base+step) + "pt";
 
-    var total = 0, nS = 0, nL = 0;
-    var out = [];
-    var paras = current.split(/\n+/);
-    for (var pi = 0; pi < paras.length; pi++){
-      var buf = ["<p style=\"font-size:" + base + "pt\">"];
-      var s = paras[pi];
-      for (var ci = 0; ci < s.length; ci++){
-        var ch = s.charAt(ci);
-        var st = strokeOf(ch);
-        if (st > 0){
-          total++;
-          if (st <= lowT){
-            nS++;
-            buf.push("<span style=\"font-size:" + (base-step) + "pt\"" + (color ? " class=\"mark-s\"" : "") + ">" + esc(ch) + "</span>");
-            continue;
+    function renderText(uniform){
+      var total = 0, nS = 0, nL = 0;
+      var out = [];
+      var paras = current.split(/\n+/);
+      for (var pi = 0; pi < paras.length; pi++){
+        var buf = ["<p style=\"font-size:" + base + "pt\">"];
+        var s = paras[pi];
+        for (var ci = 0; ci < s.length; ci++){
+          var ch = s.charAt(ci);
+          var st = strokeOf(ch);
+          if (st > 0){
+            total++;
+            if (st <= lowT){
+              nS++;
+              if (!uniform){
+                buf.push("<span style=\"font-size:" + (base-step) + "pt\"" + (color ? " class=\"mark-s\"" : "") + ">" + esc(ch) + "</span>");
+                continue;
+              }
+            } else if (st >= highT){
+              nL++;
+              if (!uniform){
+                buf.push("<span style=\"font-size:" + (base+step) + "pt\"" + (color ? " class=\"mark-l\"" : "") + ">" + esc(ch) + "</span>");
+                continue;
+              }
+            }
           }
-          if (st >= highT){
-            nL++;
-            buf.push("<span style=\"font-size:" + (base+step) + "pt\"" + (color ? " class=\"mark-l\"" : "") + ">" + esc(ch) + "</span>");
-            continue;
-          }
+          buf.push(esc(ch));
         }
-        buf.push(esc(ch));
+        buf.push("</p>");
+        out.push(buf.join(""));
       }
-      buf.push("</p>");
-      out.push(buf.join(""));
+      return { html: out.join(""), total: total, nS: nS, nL: nL };
     }
-    $("reader").innerHTML = out.join("");
-    if (total > 0){
-      var adj = nS + nL;
-      $("stats").textContent = "內文 " + total + " 字：小一級 " + nS + " 字、標準 " +
-        (total - adj) + " 字、大一級 " + nL + " 字；比例字級共 " + adj + " 字，占 " +
-        (Math.round(adj / total * 1000) / 10) + "%。";
+
+    var r = renderText(false);
+    var html = r.html;
+    if ($("compare").checked){
+      var u = renderText(true);
+      html = "<div class=\"cmp-cap\">比例字級</div>" + r.html +
+             "<div class=\"cmp-cap fixed\">固定字級（對照）</div>" + u.html;
+    }
+    $("reader").innerHTML = html;
+    if (r.total > 0){
+      var adj = r.nS + r.nL;
+      $("stats").textContent = "內文 " + r.total + " 字：小一級 " + r.nS + " 字、標準 " +
+        (r.total - adj) + " 字、大一級 " + r.nL + " 字；比例字級共 " + adj + " 字，占 " +
+        (Math.round(adj / r.total * 1000) / 10) + "%。";
     } else {
       $("stats").textContent = "尚未載入文章。";
     }
@@ -197,7 +215,7 @@ $("btnDemo").addEventListener("click", function(){
   $("src").value = "";
   render();
 });
-["base","step","lowT","highT","markColor"].forEach(function(id){
+["base","step","lowT","highT","markColor","compare"].forEach(function(id){
   $(id).addEventListener("change", render);
 });
 render();
