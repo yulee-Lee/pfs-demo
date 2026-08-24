@@ -50,7 +50,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
 
 <header>
   <h1>比例字級閱讀示範</h1>
-  <div class="sub">Proportional Font Size｜依漢字筆畫數自動調整字級｜發明專利 I847748（白永松 先生）</div>
+  <div class="sub">Proportional Font Size｜依漢字筆畫數自動調整字級｜發明專利 I847748（白永松 先生）｜示範版本 v4（2026-08-24）</div>
 </header>
 
 <div class="panel">
@@ -58,7 +58,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
   <div style="font-size:15px; color:#444;">
     下方文章已依「比例字級」自動呈現：筆畫少的字縮小一級、筆畫普通的用基準字級、筆畫多的字放大一級。
     您也可以把任何文字（例如在 LINE 長按訊息選「複製」）貼進下面的輸入框，按「以比例字級呈現」，
-    立即看到相同效果。預設勾選「與固定字級並列對照」，可上下比較兩種呈現的差別。筆畫數依據中華民國 CNS11643 全字庫官方資料自動判定，涵蓋數萬字。
+    立即看到相同效果。可勾選「與固定字級並列對照」，上下比較兩種呈現的差別。級距以字高百分比設定，預設 8.3%（即 12pt 縮至 11pt、放大至 13pt 的比例），對應字面（面積）增減約 16%～17%，各檔位皆在專利涵蓋的字面 10%～40% 範圍內。筆畫數依據中華民國 CNS11643 全字庫官方資料自動判定，涵蓋數萬字。
   </div>
   <textarea id="src" placeholder="在此貼上文字（可從 LINE、新聞、電子書複製）"></textarea>
   <div class="btnrow">
@@ -73,8 +73,8 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
   <div class="ctrl">
     <div class="item"><label>基準字級</label>
       <select id="base"></select><span>pt</span></div>
-    <div class="item"><label>級距</label>
-      <select id="step"><option>0.5</option><option>1</option><option>1.5</option><option selected>2</option><option>3</option></select><span>pt</span></div>
+    <div class="item"><label>級距（字高）</label>
+      <select id="step"><option value="0.05">5%</option><option value="0.07">7%</option><option value="0.0833" selected>8.3%（同 12pt±1pt）</option><option value="0.10">10%</option><option value="0.12">12%</option><option value="0.15">15%</option><option value="0.18">18%</option></select></div>
     <div class="item"><label>筆畫</label>
       <select id="lowT"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
       <label>畫以下 → 減一級</label></div>
@@ -83,7 +83,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
     <div class="item"><label>筆畫</label>
       <select id="highT"><option>14</option><option>15</option><option selected>16</option><option>17</option><option>18</option></select>
       <label>畫以上 → 加一級</label></div>
-    <div class="item"><label><input type="checkbox" id="compare" checked> 與固定字級並列對照</label></div>
+    <div class="item"><label><input type="checkbox" id="compare"> 與固定字級並列對照</label></div>
     <div class="item"><label><input type="checkbox" id="markColor"> 以顏色標示大小字級（檢視用）</label></div>
   </div>
   <table class="rule">
@@ -103,6 +103,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
 <footer>
   依「漢字字體尺寸調整系統及方法」（中華民國發明專利 I847748）實作之示範。<br>
   筆畫數資料來源：CNS11643 中文標準交換碼全字庫（政府開放資料）、Unicode Unihan。<br>
+  內文字體：霞鶩文楷（LXGW WenKai TC，開源楷體，可免費商用與內嵌）。<br>
   序川科技工作室　製作：Jeffrey Lee　Email：hsuchuan68@gmail.com
 </footer>
 
@@ -130,7 +131,7 @@ var $ = function(id){ return document.getElementById(id); };
 var baseSel = $("base");
 for (var p = 10; p <= 28; p++){
   var o = document.createElement("option");
-  o.textContent = p; if (p === 16) o.selected = true;
+  o.textContent = p; if (p === 18) o.selected = true;
   baseSel.appendChild(o);
 }
 
@@ -152,9 +153,13 @@ function render(){
     $("ruleLow").textContent = "筆畫 " + lowT + " 畫以下";
     $("ruleMid").textContent = "筆畫 " + (lowT+1) + "～" + (highT-1) + " 畫";
     $("ruleHigh").textContent = "筆畫 " + highT + " 畫以上";
-    $("ruleLowPt").textContent = (base-step) + "pt";
-    $("ruleMidPt").textContent = base + "pt";
-    $("ruleHighPt").textContent = (base+step) + "pt";
+    var smallPt = Math.round(base * (1 - step) * 10) / 10;
+    var largePt = Math.round(base * (1 + step) * 10) / 10;
+    var areaDn = Math.round((1 - (1-step)*(1-step)) * 100);
+    var areaUp = Math.round(((1+step)*(1+step) - 1) * 100);
+    $("ruleLowPt").textContent = smallPt + "pt（字高 −" + Math.round(step*1000)/10 + "%，字面約 −" + areaDn + "%）";
+    $("ruleMidPt").textContent = base + "pt（基準）";
+    $("ruleHighPt").textContent = largePt + "pt（字高 ＋" + Math.round(step*1000)/10 + "%，字面約 ＋" + areaUp + "%）";
 
     function renderText(uniform){
       var total = 0, nS = 0, nL = 0;
@@ -171,13 +176,13 @@ function render(){
             if (st <= lowT){
               nS++;
               if (!uniform){
-                buf.push("<span style=\"font-size:" + (base-step) + "pt\"" + (color ? " class=\"mark-s\"" : "") + ">" + esc(ch) + "</span>");
+                buf.push("<span style=\"font-size:" + smallPt + "pt\"" + (color ? " class=\"mark-s\"" : "") + ">" + esc(ch) + "</span>");
                 continue;
               }
             } else if (st >= highT){
               nL++;
               if (!uniform){
-                buf.push("<span style=\"font-size:" + (base+step) + "pt\"" + (color ? " class=\"mark-l\"" : "") + ">" + esc(ch) + "</span>");
+                buf.push("<span style=\"font-size:" + largePt + "pt\"" + (color ? " class=\"mark-l\"" : "") + ">" + esc(ch) + "</span>");
                 continue;
               }
             }
