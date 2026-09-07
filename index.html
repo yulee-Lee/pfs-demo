@@ -63,7 +63,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
 
 <header>
   <h1>比例字級閱讀</h1>
-  <div class="sub">網頁版 1.1（2026-09-07）｜發明專利 I847748</div>
+  <div class="sub">網頁版 1.2（2026-09-08）｜發明專利 I847748</div>
 </header>
 
 <div class="panel">
@@ -207,22 +207,24 @@ function sizes(){
 
 function renderDemo(){
   try{
-    var z = sizes();
+    var db = state.size + 4;
+    var ds = r1(db * Math.sqrt(1 - state.ratio));
+    var dl = r1(db * Math.sqrt(1 + state.ratio));
     var out = [];
     for (var i = 0; i < DEMO_SENT.length; i++){
       var ch = DEMO_SENT.charAt(i);
       var st = strokeOf(ch);
       if (state.pfs && st > 0 && st <= state.low){
-        out.push('<span style="font-size:' + z.small + 'pt">' + ch + '</span>');
+        out.push('<span style="font-size:' + ds + 'pt">' + ch + '</span>');
       } else if (state.pfs && st >= state.high){
-        out.push('<span style="font-size:' + z.large + 'pt">' + ch + '</span>');
+        out.push('<span style="font-size:' + dl + 'pt">' + ch + '</span>');
       } else {
         out.push(ch);
       }
     }
     var d = $("demoLine");
     d.style.fontFamily = FONTS[state.font];
-    d.style.fontSize = (state.size + 4) + "pt";
+    d.style.fontSize = db + "pt";
     d.innerHTML = out.join("");
   } catch(e){}
 }
