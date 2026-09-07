@@ -63,7 +63,7 @@ footer{ font-size:12px; color:#888; text-align:center; margin-top:26px; line-hei
 
 <header>
   <h1>比例字級閱讀</h1>
-  <div class="sub">網頁版 1.0（2026-09-06）｜發明專利 I847748</div>
+  <div class="sub">網頁版 1.1（2026-09-07）｜發明專利 I847748</div>
 </header>
 
 <div class="panel">
@@ -180,6 +180,21 @@ var SAMPLE1 = "壬戌之秋，七月既望，蘇子與客泛舟遊於赤壁之�
 var SAMPLE2 = "臺灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n閱讀時若覺得文字太小，可將上方的字體大小調大；筆畫繁複的字自動放大、筆畫簡單的字縮小，每一個字都更容易辨認，眼睛也比較不容易疲勞。";
 
 var state = { font:"kai", size:19, pfs:true, ratio:0.15, low:4, high:16, stats:false };
+try{
+  var saved = JSON.parse(localStorage.getItem("pfsReaderSet") || "null");
+  if (saved){
+    if (FONTS[saved.font]) state.font = saved.font;
+    if ([16,19,22,26].indexOf(saved.size) >= 0) state.size = saved.size;
+    if (typeof saved.pfs === "boolean") state.pfs = saved.pfs;
+    if ([0.10,0.12,0.15,0.18,0.20].indexOf(saved.ratio) >= 0) state.ratio = saved.ratio;
+    if ([3,4,5,6].indexOf(saved.low) >= 0) state.low = saved.low;
+    if ([14,15,16,17].indexOf(saved.high) >= 0) state.high = saved.high;
+    if (typeof saved.stats === "boolean") state.stats = saved.stats;
+  }
+}catch(e){}
+function saveSet(){
+  try{ localStorage.setItem("pfsReaderSet", JSON.stringify(state)); }catch(e){}
+}
 var current = SAMPLE2;
 
 var $ = function(id){ return document.getElementById(id); };
@@ -274,6 +289,7 @@ function bindChips(id, key, num){
     for (var i = 0; i < cs.length; i++) cs[i].classList.remove("on");
     t.classList.add("on");
     state[key] = num ? parseFloat(t.getAttribute("data-v")) : t.getAttribute("data-v");
+    saveSet();
     renderAll();
   });
 }
@@ -285,12 +301,14 @@ bindChips("highChips", "high", true);
 
 $("pfsSw").addEventListener("click", function(){
   state.pfs = !state.pfs;
+  saveSet();
   this.classList.toggle("on", state.pfs);
   $("ratioGrp").style.display = state.pfs ? "" : "none";
   renderAll();
 });
 $("statSw").addEventListener("click", function(){
   state.stats = !state.stats;
+  saveSet();
   this.classList.toggle("on", state.stats);
   renderText();
 });
@@ -349,6 +367,23 @@ $("fileIn").addEventListener("change", function(){
   link.addEventListener("click", function(ev){ ev.preventDefault(); if (opened && !timer){ } });
 })();
 
+function reflectState(){
+  try{
+    var m = { fontChips:["font",false], sizeChips:["size",true], ratioChips:["ratio",true], lowChips:["low",true], highChips:["high",true] };
+    for (var id in m){
+      var key = m[id][0], num = m[id][1];
+      var cs = $(id).querySelectorAll(".chip");
+      for (var i = 0; i < cs.length; i++){
+        var v = num ? parseFloat(cs[i].getAttribute("data-v")) : cs[i].getAttribute("data-v");
+        cs[i].classList.toggle("on", v === state[key]);
+      }
+    }
+    $("pfsSw").classList.toggle("on", state.pfs);
+    $("statSw").classList.toggle("on", state.stats);
+    $("ratioGrp").style.display = state.pfs ? "" : "none";
+  }catch(e){}
+}
+reflectState();
 renderAll();
 })();
 </script>
