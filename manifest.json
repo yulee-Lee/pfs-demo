@@ -1,0 +1,26 @@
+{
+  "name": "比例字級閱讀",
+  "short_name": "比例字級",
+  "description": "依漢字筆畫自動調整字體大小的閱讀工具（中華民國發明專利 I847748）",
+  "start_url": "https://yulee-lee.github.io/pfs-demo/",
+  "scope": "https://yulee-lee.github.io/pfs-demo/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "zh-Hant-TW",
+  "background_color": "#f4efe6",
+  "theme_color": "#f4efe6",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
