@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>比例字級閱讀</title>
-<meta name="theme-color" content="#f4efe6">
+<meta name="theme-color" content="#a08e7b">
 <link rel="manifest" href="https://yulee-lee.github.io/pfs-demo/manifest.json">
 <link rel="apple-touch-icon" href="https://yulee-lee.github.io/pfs-demo/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,19 +15,20 @@
 *{ box-sizing:border-box; margin:0; padding:0; }
 :root{
   --paper:#f4efe6; --sheet:#fffdf8; --line:#d6cdbe;
+  --ground:#a08e7b; --onground:#2b2620; --groundline:#8a7867;   /* 絹地色取自北宋竹鳩圖 */
   --ink:#1f1f1f; --mute:#6b655c; --cinnabar:#a6382f;
   --kai:"TW-Kai","DFKai-SB","BiaoKai","Kaiti TC",serif;
 }
 body{ -webkit-text-size-adjust:100%; text-size-adjust:100%;
       font-family:"Microsoft JhengHei","PingFang TC","Noto Sans CJK TC",sans-serif;
-      background:var(--paper); color:var(--ink); line-height:1.7; }
+      background:var(--ground); color:var(--ink); line-height:1.7; }
 .wrap{ max-width:880px; margin:0 auto; padding:18px 16px 40px; }
-header{ border-bottom:1px solid var(--line); padding:10px 0 12px; margin-bottom:14px;
+header{ border-bottom:1px solid var(--groundline); padding:10px 0 12px; margin-bottom:14px;
         display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:6px; }
 .brand{ display:flex; align-items:center; gap:10px; }
 .brand img{ width:30px; height:30px; display:block; }
 header h1{ font-family:var(--kai); font-size:25px; font-weight:bold; color:var(--ink); letter-spacing:3px; }
-header .sub{ font-size:12.5px; color:var(--mute); }
+header .sub{ font-size:12.5px; color:var(--onground); }
 .panel{ background:var(--sheet); border:1px solid var(--line); border-radius:4px; padding:14px 16px; margin-bottom:14px; }
 .panel h2{ font-family:var(--kai); font-size:19px; font-weight:bold; color:var(--ink);
            border-left:4px solid var(--cinnabar); padding-left:8px; margin-bottom:10px; }
@@ -63,7 +64,7 @@ button:active{ opacity:.85; }
 .advlink{ font-size:13px; color:var(--mute); user-select:none; -webkit-user-select:none; cursor:default; }
 #advPanel{ border-top:1px solid var(--line); margin-top:12px; padding-top:12px; }
 #advPanel[hidden]{ display:none; }
-footer{ font-size:12px; color:var(--mute); text-align:center; margin-top:26px; line-height:1.9; }
+footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26px; line-height:1.9; }
 @media (max-width:520px){
   header h1{ font-size:21px; letter-spacing:2px; }
   .brand img{ width:26px; height:26px; }
@@ -78,7 +79,7 @@ footer{ font-size:12px; color:var(--mute); text-align:center; margin-top:26px; l
 
 <header>
   <div class="brand"><img id="brandMark" alt=""><h1>比例字級閱讀</h1></div>
-  <div class="sub">網頁版 2.0（2026-09-21）｜發明專利 I847748</div>
+  <div class="sub">網頁版 2.1（2026-09-21）｜發明專利 I847748</div>
 </header>
 
 <div class="panel">
@@ -108,8 +109,8 @@ footer{ font-size:12px; color:var(--mute); text-align:center; margin-top:26px; l
   <div class="grp" id="ratioGrp">
     <div class="lb">字面增減</div>
     <div class="chips" id="ratioChips">
-      <span class="chip on" data-v="0.15">15%</span>
-      <span class="chip" data-v="0.18">18%</span>
+      <span class="chip" data-v="0.15">15%</span>
+      <span class="chip on" data-v="0.18">18%</span>
       <span class="chip" data-v="0.20">20%</span>
       <span class="chip" data-v="0.25">25%</span>
     </div>
@@ -191,9 +192,9 @@ var DEMO_SENT = "自其不變者而觀之";
 var MARK_SRC = "data:image/png;base64,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";
 var ENDMARK = '　<img class="endmark" src="' + MARK_SRC + '">';
 var SAMPLE1 = "壬戌之秋，七月既望，蘇子與客泛舟遊於赤壁之下。清風徐來，水波不興，舉酒屬客，誦明月之詩，歌窈窕之章。少焉，月出於東山之上，徘徊於斗牛之間，白露橫江，水光接天；縱一葦之所如，凌萬頃之茫然。浩浩乎如馮虛御風，而不知其所止；飄飄乎如遺世獨立，羽化而登仙。\n於是飲酒樂甚，扣舷而歌之。歌曰：「桂棹兮蘭槳，擊空明兮泝流光。渺渺兮予懷，望美人兮天一方。」客有吹洞簫者，倚歌而和之，其聲嗚嗚然，如怨如慕，如泣如訴，餘音嫋嫋，不絕如縷。舞幽壑之潛蛟，泣孤舟之嫠婦。\n蘇子愀然，正襟危坐，而問客曰：「何為其然也？」\n客曰：「『月明星稀，烏鵲南飛』，此非曹孟德之詩乎？西望夏口，東望武昌，山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？方其破荊州，下江陵，順流而東也，舳艫千里，旌旗蔽空，釃酒臨江，橫槊賦詩，固一世之雄也，而今安在哉？況吾與子，漁樵於江渚之上，侶魚蝦而友麋鹿；駕一葉之扁舟，擧匏樽以相屬。寄蜉蝣於天地，渺滄海之一粟，哀吾生之須臾，羨長江之無窮。挾飛仙以遨遊，抱眀月而長終。知不可乎驟得，託遺響於悲風。\n蘇子曰：「客亦知夫水與月乎？逝者如斯，而未嘗往也；盈虛者如彼，而卒莫消長也，蓋將自其變者而觀之，則天地曾不能以一瞬；自其不變者而觀之，則物與我皆無盡也，而又何羨乎？且夫天地之間，物各有主，苟非吾之所有，雖一毫而莫取。惟江上之清風，與山間之明月，耳得之而為聲，目遇之而成色，取之無禁，用之不竭，是造物者之無盡藏也，而吾與子之所共適。」\n客喜而笑，洗盞更酌。肴核既盡，杯盤狼籍，相與枕藉乎舟中，不知東方之既白。";
-var SAMPLE2 = "臺灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n閱讀時若覺得文字太小，可將上方的字體大小調大；筆畫繁複的字自動放大、筆畫簡單的字縮小，每一個字都更容易辨認，眼睛也比較不容易疲勞。";
+var SAMPLE2 = "臺灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n這段文字正是以比例字級排版。比例字級依筆畫多寡調整每個字的字面：筆畫少的字縮小，筆畫多的字放大，字距與行距維持不變。筆畫密的字不再擠成一團，筆畫疏的字也不顯得空洞，整段讀起來更清楚，眼睛也比較不容易疲勞。";
 
-var state = { font:"kai", size:19, pfs:true, ratio:0.15, low:4, high:16, stats:false };
+var state = { font:"kai", size:19, pfs:true, ratio:0.18, low:4, high:16, stats:false };
 try{
   var saved = JSON.parse(localStorage.getItem("pfsReaderSet") || "null");
   if (saved){
