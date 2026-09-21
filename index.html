@@ -108,11 +108,10 @@ footer{ font-size:12px; color:var(--mute); text-align:center; margin-top:26px; l
   <div class="grp" id="ratioGrp">
     <div class="lb">字面增減</div>
     <div class="chips" id="ratioChips">
-      <span class="chip" data-v="0.10">10%</span>
-      <span class="chip" data-v="0.12">12%</span>
       <span class="chip on" data-v="0.15">15%</span>
       <span class="chip" data-v="0.18">18%</span>
       <span class="chip" data-v="0.20">20%</span>
+      <span class="chip" data-v="0.25">25%</span>
     </div>
   </div>
 </div>
@@ -133,7 +132,7 @@ footer{ font-size:12px; color:var(--mute); text-align:center; margin-top:26px; l
   <h2>呈現結果</h2>
   <div id="stats" hidden></div>
   <div id="reader"></div>
-  <div style="margin-top:12px; text-align:right"><span class="advlink" id="advLink">進階</span></div>
+  <div style="margin-top:12px; text-align:right"><span class="advlink" id="advLink">進階設定</span></div>
   <div id="advPanel" hidden>
     <div class="grp">
       <div class="lb">縮小門檻：筆畫幾畫以下縮小</div>
@@ -201,7 +200,7 @@ try{
     if (FONTS[saved.font]) state.font = saved.font;
     if ([16,19,22,26].indexOf(saved.size) >= 0) state.size = saved.size;
     if (typeof saved.pfs === "boolean") state.pfs = saved.pfs;
-    if ([0.10,0.12,0.15,0.18,0.20].indexOf(saved.ratio) >= 0) state.ratio = saved.ratio;
+    if ([0.15,0.18,0.20,0.25].indexOf(saved.ratio) >= 0) state.ratio = saved.ratio;
     if ([3,4,5].indexOf(saved.low) >= 0) state.low = saved.low;
     if ([14,15,16].indexOf(saved.high) >= 0) state.high = saved.high;
     if (typeof saved.stats === "boolean") state.stats = saved.stats;
@@ -363,12 +362,12 @@ $("fileIn").addEventListener("change", function(){
   function open(){
     opened = true;
     $("advPanel").hidden = false;
-    link.textContent = "收合進階";
+    link.textContent = "收起進階設定";
   }
   function close(){
     opened = false;
     $("advPanel").hidden = true;
-    link.textContent = "進階";
+    link.textContent = "進階設定";
   }
   function down(){
     if (opened) return;
@@ -376,7 +375,7 @@ $("fileIn").addEventListener("change", function(){
   }
   function up(){
     if (timer){ clearTimeout(timer); timer = null;
-      if (opened){ close(); } else { link.textContent = "長按可進入進階"; setTimeout(function(){ if(!opened) link.textContent = "進階"; }, 1600); }
+      if (opened){ close(); } else { link.textContent = "長按開啟進階設定"; setTimeout(function(){ if(!opened) link.textContent = "進階設定"; }, 1600); }
     } else if (opened === false){ /* long press already opened */ }
   }
   link.addEventListener("mousedown", down);
