@@ -66,7 +66,6 @@ button:active{ opacity:.85; }
 .endmark{ height:0.95em; width:0.95em; vertical-align:-0.22em; }
 .advlink{ font-size:13px; color:var(--mute); user-select:none; -webkit-user-select:none; cursor:default; }
 #advPanel{ border-top:1px solid var(--line); margin-top:12px; padding-top:12px; }
-#advPanel[hidden]{ display:none; }
 footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26px; line-height:1.9; }
 @media (max-width:520px){
   header h1{ font-size:21px; letter-spacing:2px; }
@@ -82,13 +81,13 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
 
 <header>
   <div class="brand"><img id="brandMark" alt=""><h1>比例字級閱讀</h1></div>
-  <div class="sub">網頁版 2.5（2026-09-21）｜發明專利 I847748</div>
+  <div class="sub">網頁版 2.6（2026-09-26）｜發明專利 I847748</div>
 </header>
 
 <div class="panel">
   <div class="demo-line" id="demoLine"></div>
   <div class="grp">
-    <div class="lb">字體</div>
+    <div class="lb">一　選擇字體</div>
     <div class="chips" id="fontChips">
       <span class="chip on" data-v="kai">正楷體</span>
       <span class="chip" data-v="lxgw">霞鶩文楷</span>
@@ -97,7 +96,7 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
     </div>
   </div>
   <div class="grp">
-    <div class="lb">字體大小</div>
+    <div class="lb">二　選擇基準字面（字體大小）</div>
     <div class="chips" id="sizeChips">
       <span class="chip" data-v="16">小</span>
       <span class="chip on" data-v="19">中</span>
@@ -110,12 +109,35 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
     <span class="sw on" id="pfsSw"></span>
   </div>
   <div class="grp" id="ratioGrp">
-    <div class="lb">字面增減</div>
+    <div class="lb">三　選擇部分字面增減比例</div>
     <div class="chips" id="ratioChips">
       <span class="chip" data-v="0.15">15%</span>
       <span class="chip on" data-v="0.18">18%</span>
       <span class="chip" data-v="0.20">20%</span>
       <span class="chip" data-v="0.25">25%</span>
+      <span class="chip" data-v="0.30">30%</span>
+    </div>
+  </div>
+  <div id="advPanel">
+    <div class="grp">
+      <div class="lb">四　選擇縮放筆畫　縮小門檻：筆畫幾畫以下縮小</div>
+      <div class="chips" id="lowChips">
+        <span class="chip" data-v="3">3</span>
+        <span class="chip on" data-v="4">4</span>
+        <span class="chip" data-v="5">5</span>
+      </div>
+    </div>
+    <div class="grp">
+      <div class="lb">　　　　　　　　　放大門檻：筆畫幾畫以上放大</div>
+      <div class="chips" id="highChips">
+        <span class="chip" data-v="14">14</span>
+        <span class="chip" data-v="15">15</span>
+        <span class="chip on" data-v="16">16</span>
+      </div>
+    </div>
+    <div class="swrow">
+      <span class="t" style="font-weight:normal; font-size:15px">顯示統計</span>
+      <span class="sw" id="statSw"></span>
     </div>
   </div>
 </div>
@@ -136,33 +158,8 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
   <h2>呈現結果</h2>
   <div id="stats" hidden></div>
   <div id="reader"></div>
-  <div style="margin-top:12px; text-align:right"><span class="advlink" id="advLink">進階設定</span></div>
-  <div id="advPanel" hidden>
-    <div class="grp">
-      <div class="lb">縮小門檻：筆畫幾畫以下縮小</div>
-      <div class="chips" id="lowChips">
-        <span class="chip" data-v="3">3</span>
-        <span class="chip on" data-v="4">4</span>
-        <span class="chip" data-v="5">5</span>
-      </div>
-    </div>
-    <div class="grp">
-      <div class="lb">放大門檻：筆畫幾畫以上放大</div>
-      <div class="chips" id="highChips">
-        <span class="chip" data-v="14">14</span>
-        <span class="chip" data-v="15">15</span>
-        <span class="chip on" data-v="16">16</span>
-      </div>
-    </div>
-    <div class="swrow">
-      <span class="t" style="font-weight:normal; font-size:15px">顯示統計</span>
-      <span class="sw" id="statSw"></span>
-    </div>
-    <div style="font-size:12.5px; color:#777; margin-top:8px">
-      比例字級（Proportional Font Size）｜中華民國發明專利 I847748｜筆畫資料：CNS11643 全字庫
-    </div>
-  </div>
 </div>
+
 
 <footer>
   依「漢字字體尺寸調整系統及方法」（中華民國發明專利 I847748）實作。<br>
@@ -195,7 +192,7 @@ var DEMO_SENT = "自其不變者而觀之";
 var MARK_SRC = "data:image/png;base64,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";
 var ENDMARK = '　<img class="endmark" src="' + MARK_SRC + '">';
 var SAMPLE1 = "壬戌之秋，七月既望，蘇子與客泛舟遊於赤壁之下。清風徐來，水波不興，舉酒屬客，誦明月之詩，歌窈窕之章。少焉，月出於東山之上，徘徊於斗牛之間，白露橫江，水光接天；縱一葦之所如，凌萬頃之茫然。浩浩乎如馮虛御風，而不知其所止；飄飄乎如遺世獨立，羽化而登仙。\n於是飲酒樂甚，扣舷而歌之。歌曰：「桂棹兮蘭槳，擊空明兮泝流光。渺渺兮予懷，望美人兮天一方。」客有吹洞簫者，倚歌而和之，其聲嗚嗚然，如怨如慕，如泣如訴，餘音嫋嫋，不絕如縷。舞幽壑之潛蛟，泣孤舟之嫠婦。\n蘇子愀然，正襟危坐，而問客曰：「何為其然也？」\n客曰：「『月明星稀，烏鵲南飛』，此非曹孟德之詩乎？西望夏口，東望武昌，山川相繆，鬱乎蒼蒼，此非孟德之困於周郎者乎？方其破荊州，下江陵，順流而東也，舳艫千里，旌旗蔽空，釃酒臨江，橫槊賦詩，固一世之雄也，而今安在哉？況吾與子，漁樵於江渚之上，侶魚蝦而友麋鹿；駕一葉之扁舟，擧匏樽以相屬。寄蜉蝣於天地，渺滄海之一粟，哀吾生之須臾，羨長江之無窮。挾飛仙以遨遊，抱眀月而長終。知不可乎驟得，託遺響於悲風。\n蘇子曰：「客亦知夫水與月乎？逝者如斯，而未嘗往也；盈虛者如彼，而卒莫消長也，蓋將自其變者而觀之，則天地曾不能以一瞬；自其不變者而觀之，則物與我皆無盡也，而又何羨乎？且夫天地之間，物各有主，苟非吾之所有，雖一毫而莫取。惟江上之清風，與山間之明月，耳得之而為聲，目遇之而成色，取之無禁，用之不竭，是造物者之無盡藏也，而吾與子之所共適。」\n客喜而笑，洗盞更酌。肴核既盡，杯盤狼籍，相與枕藉乎舟中，不知東方之既白。";
-var SAMPLE2 = "臺灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n這段文字正是以比例字級排版。比例字級依筆畫多寡調整每個字的字面：筆畫少的字縮小，筆畫多的字放大，字距與行距維持不變。筆畫密的字不再擠成一團，筆畫疏的字也不顯得空洞，整段讀起來更清楚，眼睛也比較不容易疲勞。";
+var SAMPLE2 = "台灣即將進入秋季，早晚溫差逐漸變大。醫師提醒，銀髮族外出運動時應注意保暖，並補充足夠水分。營養師也建議，平日飲食可多攝取蔬菜、水果與優質蛋白質，維持均衡營養，讓身體保持最佳狀態。\n這段文字正是以比例字級排版。比例字級依筆畫多寡調整每個字的字面：筆畫少的字縮小，筆畫多的字放大，字距與行距維持不變。筆畫密的字不再擠成一團，筆畫疏的字也不顯得空洞，整段讀起來更清楚，眼睛也比較不容易疲勞。";
 
 var state = { font:"kai", size:19, pfs:true, ratio:0.18, low:4, high:16, stats:false };
 try{
@@ -204,7 +201,7 @@ try{
     if (FONTS[saved.font]) state.font = saved.font;
     if ([16,19,22,26].indexOf(saved.size) >= 0) state.size = saved.size;
     if (typeof saved.pfs === "boolean") state.pfs = saved.pfs;
-    if ([0.15,0.18,0.20,0.25].indexOf(saved.ratio) >= 0) state.ratio = saved.ratio;
+    if ([0.15,0.18,0.20,0.25,0.30].indexOf(saved.ratio) >= 0) state.ratio = saved.ratio;
     if ([3,4,5].indexOf(saved.low) >= 0) state.low = saved.low;
     if ([14,15,16].indexOf(saved.high) >= 0) state.high = saved.high;
     if (typeof saved.stats === "boolean") state.stats = saved.stats;
@@ -359,36 +356,6 @@ $("fileIn").addEventListener("change", function(){
   this.value = "";
 });
 
-// 進階:長按進入(600ms),點一下提示
-(function(){
-  var timer = null, opened = false;
-  var link = $("advLink");
-  function open(){
-    opened = true;
-    $("advPanel").hidden = false;
-    link.textContent = "收起進階設定";
-  }
-  function close(){
-    opened = false;
-    $("advPanel").hidden = true;
-    link.textContent = "進階設定";
-  }
-  function down(){
-    if (opened) return;
-    timer = setTimeout(function(){ timer = null; open(); }, 600);
-  }
-  function up(){
-    if (timer){ clearTimeout(timer); timer = null;
-      if (opened){ close(); } else { link.textContent = "長按開啟進階設定"; setTimeout(function(){ if(!opened) link.textContent = "進階設定"; }, 1600); }
-    } else if (opened === false){ /* long press already opened */ }
-  }
-  link.addEventListener("mousedown", down);
-  link.addEventListener("touchstart", down, {passive:true});
-  link.addEventListener("mouseup", up);
-  link.addEventListener("mouseleave", function(){ if (timer){ clearTimeout(timer); timer = null; } });
-  link.addEventListener("touchend", up);
-  link.addEventListener("click", function(ev){ ev.preventDefault(); if (opened && !timer){ } });
-})();
 
 function reflectState(){
   try{
