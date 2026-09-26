@@ -66,6 +66,7 @@ button:active{ opacity:.85; }
 .endmark{ height:0.95em; width:0.95em; vertical-align:-0.22em; }
 .advlink{ font-size:13px; color:var(--mute); user-select:none; -webkit-user-select:none; cursor:default; }
 #advPanel{ border-top:1px solid var(--line); margin-top:12px; padding-top:12px; }
+.sublb{ font-size:13.5px; color:var(--mute); margin:0 0 6px 14px; }
 footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26px; line-height:1.9; }
 @media (max-width:520px){
   header h1{ font-size:21px; letter-spacing:2px; }
@@ -119,8 +120,9 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
     </div>
   </div>
   <div id="advPanel">
+    <div class="lb">四　選擇縮放筆畫</div>
     <div class="grp">
-      <div class="lb">四　選擇縮放筆畫　縮小門檻：筆畫幾畫以下縮小</div>
+      <div class="sublb">縮小門檻：筆畫幾畫以下縮小</div>
       <div class="chips" id="lowChips">
         <span class="chip" data-v="3">3</span>
         <span class="chip on" data-v="4">4</span>
@@ -128,7 +130,7 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
       </div>
     </div>
     <div class="grp">
-      <div class="lb">　　　　　　　　　放大門檻：筆畫幾畫以上放大</div>
+      <div class="sublb">放大門檻：筆畫幾畫以上放大</div>
       <div class="chips" id="highChips">
         <span class="chip" data-v="14">14</span>
         <span class="chip" data-v="15">15</span>
