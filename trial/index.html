@@ -460,6 +460,7 @@ $("fileIn").addEventListener("change", function(){
   link.addEventListener("mouseup", up);
   link.addEventListener("mouseleave", function(){ closing = false; if (timer){ clearTimeout(timer); timer = null; } });
   link.addEventListener("touchend", up);
+  link.addEventListener("touchcancel", function(){ lastTouch = Date.now(); closing = false; if (timer){ clearTimeout(timer); timer = null; } });   /* 捲動等中斷觸控:不開也不收 */
   link.addEventListener("click", function(ev){ ev.preventDefault(); if (opened && !timer){ } });
 })();
 
