@@ -67,6 +67,7 @@ button:active{ opacity:.85; }
 .advlink{ font-size:13px; color:var(--mute); user-select:none; -webkit-user-select:none; cursor:default; }
 #advPanel{ border-top:1px solid var(--line); margin-top:12px; padding-top:12px; }
 .sublb{ font-size:13.5px; color:var(--mute); margin:0 0 6px 14px; }
+.video video{ display:block; width:100%; height:auto; aspect-ratio:16/9; background:#000; border-radius:2px; }
 footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26px; line-height:1.9; }
 @media (max-width:520px){
   header h1{ font-size:21px; letter-spacing:2px; }
@@ -82,8 +83,15 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
 
 <header>
   <div class="brand"><img id="brandMark" alt=""><h1>比例字級閱讀</h1></div>
-  <div class="sub">網頁版 2.9（2026-10-07）｜發明專利 I847748</div>
+  <div class="sub">網頁版 3.0（2026-10-24）｜發明專利 I 847748</div>
 </header>
+
+<div class="panel video">
+  <h2>介紹影片</h2>
+  <video controls playsinline preload="metadata" poster="video/pfs_intro_poster.jpg" width="1920" height="1080">
+    <source src="video/pfs_intro.mp4" type="video/mp4">
+  </video>
+</div>
 
 <div class="panel">
   <div class="demo-line" id="demoLine"></div>
@@ -165,7 +173,7 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
 
 
 <footer>
-  依「漢字字體尺寸調整系統及方法」（中華民國發明專利 I847748）實作。<br>
+  依「漢字字體尺寸調整系統及方法」（中華民國發明專利 I 847748）實作。<br>
   字體：全字庫正楷體（政府開放資料）、霞鶩文楷、思源宋體，均為公開授權可自由使用。<br>
   序川科技工作室　Email：hsuchuan68@gmail.com
 </footer>
