@@ -225,8 +225,9 @@ footer{ font-size:12px; color:var(--onground); text-align:center; margin-top:26p
     var nm=tryCode(saved);
     if(nm){ pass(nm); return; }
     var q=(location.search.match(/[?&]c=([^&]+)/)||[])[1];
-    nm=tryCode(q?decodeURIComponent(q):"");
-    if(nm){ try{ localStorage.setItem(KEY,q.toUpperCase()); }catch(e){} pass(nm); return; }
+    var qv=""; try{ qv=q?decodeURIComponent(q):""; }catch(e){ qv=""; }   /* 網址參數格式錯誤視同未帶邀請碼 */
+    nm=tryCode(qv);
+    if(nm){ try{ localStorage.setItem(KEY,qv.trim().toUpperCase()); }catch(e){} pass(nm); return; }
     function submit(){
       var v=document.getElementById("gcode").value;
       var n=tryCode(v);
@@ -440,11 +441,16 @@ $("fileIn").addEventListener("change", function(){
     $("advPanel").hidden = true;
     link.textContent = "進階設定";
   }
-  function down(){
-    if (opened) return;
+  var lastTouch = 0, closing = false;   /* 觸控後瀏覽器會補發滑鼠事件,800ms 內略過 */
+  function fromMouse(){ return Date.now() - lastTouch < 800; }
+  function down(ev){
+    if (ev && ev.type === "touchstart") lastTouch = Date.now(); else if (fromMouse()) return;
+    if (opened){ closing = true; return; }   /* 已開啟:按一下放開即收起 */
     timer = setTimeout(function(){ timer = null; open(); }, 600);
   }
-  function up(){
+  function up(ev){
+    if (ev && ev.type === "touchend") lastTouch = Date.now(); else if (fromMouse()) return;
+    if (closing){ closing = false; close(); return; }
     if (timer){ clearTimeout(timer); timer = null;
       if (opened){ close(); } else { link.textContent = "長按開啟進階設定"; setTimeout(function(){ if(!opened) link.textContent = "進階設定"; }, 1600); }
     } else if (opened === false){ /* long press already opened */ }
@@ -452,7 +458,7 @@ $("fileIn").addEventListener("change", function(){
   link.addEventListener("mousedown", down);
   link.addEventListener("touchstart", down, {passive:true});
   link.addEventListener("mouseup", up);
-  link.addEventListener("mouseleave", function(){ if (timer){ clearTimeout(timer); timer = null; } });
+  link.addEventListener("mouseleave", function(){ closing = false; if (timer){ clearTimeout(timer); timer = null; } });
   link.addEventListener("touchend", up);
   link.addEventListener("click", function(ev){ ev.preventDefault(); if (opened && !timer){ } });
 })();
